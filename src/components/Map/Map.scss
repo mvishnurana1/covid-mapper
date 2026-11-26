@@ -1,0 +1,49 @@
+.map {
+  position: absolute;
+  inset: 0;
+}
+
+// Keep MapLibre's own controls legible in both colour schemes.
+.maplibregl-ctrl-group {
+  border-radius: var(--radius-sm) !important;
+  box-shadow: var(--shadow) !important;
+}
+
+// On small screens the legend spans the bottom edge; lift the zoom buttons and attribution above it.
+@media (max-width: 719px) {
+  .maplibregl-ctrl-bottom-right {
+    margin-bottom: var(--legend-clearance, 0px);
+  }
+}
+
+.map-tooltip {
+  pointer-events: none;
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .maplibregl-popup-content {
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow);
+    font-size: 0.8125rem;
+    line-height: 1.35;
+  }
+
+  strong {
+    font-weight: 600;
+  }
+
+  span {
+    color: var(--text-muted);
+  }
+
+  .maplibregl-popup-tip {
+    display: none;
+  }
+}

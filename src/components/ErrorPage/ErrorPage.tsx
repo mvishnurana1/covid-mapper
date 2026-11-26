@@ -1,13 +1,17 @@
-import linkUnlink from '../../../public/wired-globe.gif';
-import './ErrorPage.scss';
+import globe from "../../assets/wired-globe.gif";
+import "./ErrorPage.scss";
 
 function ErrorPage() {
-
-    return <div className='error-page-container'>
-              <img src={ linkUnlink } alt='film-gif' width={'200px'} />
-              <h2 className='gl-header-level-two'>Something just went wrong...!</h2>
-              <div style={{ fontSize:'20px' }}>Please refresh the browser</div>
-          </div>
+  return (
+    <main className="error-page" role="alert">
+      <img src={globe} alt="" width={160} height={160} />
+      <h1>Something went wrong</h1>
+      <p>The map hit an unexpected problem. Reloading usually fixes it.</p>
+      <button type="button" className="button button--primary" onClick={() => window.location.reload()}>
+        Reload the page
+      </button>
+    </main>
+  );
 }
 
 export default ErrorPage;

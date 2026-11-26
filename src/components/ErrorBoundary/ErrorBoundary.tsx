@@ -1,6 +1,5 @@
-import { Component, ReactNode } from "react";
+import { Component, ErrorInfo, ReactNode } from "react";
 import ErrorPage from "../ErrorPage/ErrorPage";
-import "./ErrorBoundary.scss";
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -12,24 +11,20 @@ interface ErrorBoundaryState {
 }
 
 class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  constructor(props: ErrorBoundaryProps) {
-    super(props);
-    this.state = { hasError: false };
+  state: ErrorBoundaryState = { hasError: false };
+
+  static getDerivedStateFromError(): ErrorBoundaryState {
+    return { hasError: true };
   }
 
-  static getDerivedStateFromError(_: Error): ErrorBoundaryState {
-    return { hasError: true };
+  componentDidCatch(error: Error, info: ErrorInfo) {
+    console.error("Unhandled error in Covid Mapper", error, info.componentStack);
   }
 
   render() {
     if (this.state.hasError) {
-      return (
-        <div className="error-boundary">
-          <ErrorPage />;
-        </div>
-      );
+      return this.props.fallback ?? <ErrorPage />;
     }
-
     return this.props.children;
   }
 }

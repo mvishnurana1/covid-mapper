@@ -1,99 +1,39 @@
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
-import maplibregl from "maplibre-gl";
-import "maplibre-gl/dist/maplibre-gl.css";
+import { useEffect, useRef } from "react";
+import logo from "../../assets/coronavirus.png";
 import "./LandingPage.scss";
 
-interface landingPageProps {
-  setLandingPage: Dispatch<SetStateAction<boolean>>;
-  landingPage: boolean;
+interface LandingPageProps {
+  onDismiss: () => void;
 }
 
-const LandingPage: React.FC<landingPageProps> = ({
-  setLandingPage,
-  landingPage,
-}) => {
-  const mapContainer = useRef<HTMLDivElement | null>(null);
-  const map = useRef<maplibregl.Map | null>(null);
+/**
+ * Welcome card shown over the live map on a visitor's first visit.
+ * Uses a native <dialog> so focus trapping, Escape and the backdrop come for free.
+ */
+function LandingPage({ onDismiss }: LandingPageProps) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
-    if (map.current) return;
-
-    if (mapContainer.current) {
-      map.current = new maplibregl.Map({
-        container: mapContainer.current,
-        style: "https://demotiles.maplibre.org/style.json", // replace with your style URL
-        center: [0, 0], // initial map center in [lon, lat]
-        zoom: 2, // initial map zoom level
-      });
-
-      map.current.on("load", () => {});
-    }
+    const dialog = dialogRef.current;
+    if (dialog && !dialog.open) dialog.showModal();
   }, []);
 
   return (
-    <div className="container" style={{ width: "100vw", height: "100vh" }}>
-      <div ref={mapContainer} style={{ width: "100vw", height: "100vh" }}></div>
-      <div className="overlay" style={{ width: "100vw", height: "100vh" }}>
-        <div
-          style={{
-            alignItems: "center",
-            color: "black",
-            display: "flex",
-            flexDirection: "column",
-            gap: "2rem",
-            height: "100vh",
-            justifyContent: "center",
-            width: "100%",
-          }}
-        >
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
-          >
-            <div>
-              <img
-                width={"100px"}
-                src={"../../../public/coronavirus.png"}
-                alt=""
-              />
-            </div>
-            <div
-              style={{
-                fontWeight: "600",
-                fontFamily: "sans-serif",
-                lineHeight: "1.7rem",
-                fontSize: "2rem",
-              }}
-            >
-              Covid Mapper
-            </div>
-            <span
-              style={{
-                fontWeight: "400",
-                fontFamily: "sans-serif",
-                lineHeight: "1.7rem",
-                fontSize: "1.2rem",
-              }}
-            >
-              Global Insights at Your Fingertips
-            </span>
-            <div>Click to Reveal COVID-19 Stats for Any Country</div>
-          </div>
-
-          <div>
-            <button
-              onClick={() => {
-                setLandingPage(!landingPage);
-                localStorage.setItem("started", "true");
-              }}
-              className="get-started-button"
-            >
-              Get Started
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <dialog ref={dialogRef} className="landing" aria-labelledby="landing-title" onClose={onDismiss}>
+      <img className="landing__logo" src={logo} alt="" width={72} height={72} />
+      <h1 id="landing-title">Covid Mapper</h1>
+      <p className="landing__tagline">Global insights at your fingertips</p>
+      <p className="landing__body">
+        Compare COVID-19 cases, deaths and testing across the world. Countries are shaded by the measure you choose —
+        click one, or search by name, to see its full figures.
+      </p>
+      <form method="dialog">
+        <button type="submit" className="button button--primary" autoFocus>
+          Explore the map
+        </button>
+      </form>
+    </dialog>
   );
-};
+}
 
 export default LandingPage;
